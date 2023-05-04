@@ -1,9 +1,8 @@
 import { Web3Auth, Web3AuthOptions } from "@web3auth/modal";
 import type { SafeEventEmitterProvider } from "@web3auth/base";
 import Web3 from "web3";
-import Router from "next/router";
 
-type FinCustodianOption = Omit<Web3AuthOptions, "clientId"> & {
+export type FinCustodianOption = Omit<Web3AuthOptions, "clientId"> & {
   fincusId: string;
 };
 export class FinCustodian extends Web3Auth {
@@ -15,15 +14,6 @@ export class FinCustodian extends Web3Auth {
     super({ ...options, clientId });
     this.fincusId = options.fincusId;
     console.log("options", options);
-  }
-  connect() {
-    const provider = super.connect();
-    const isKYC = localStorage.getItem("isKYC");
-    if (!Boolean(isKYC)) {
-      Router.push("/kycPage");
-      return null as any;
-    }
-    return provider;
   }
 }
 
@@ -87,20 +77,17 @@ export class FinCustodianRpc {
       const destination = fromAddress;
 
       const amount = web3.utils.toWei("0.01"); // Convert 1 ether to wei
-      Router.push("/confirmPage");
-      const isConfirm = localStorage.getItem("confirm");
       // Submit transaction to the blockchain and wait for it to be mined
-      if (Boolean(isConfirm)) {
-        const receipt = await web3.eth.sendTransaction({
-          from: fromAddress,
-          to: destination,
-          value: amount,
-          maxPriorityFeePerGas: "5000000000", // Max priority fee per gas
-          maxFeePerGas: "6000000000000", // Max fee per gas
-        });
-        localStorage.removeItem("confirm");
-        return receipt;
-      }
+      const receipt = await web3.eth.sendTransaction({
+        from: fromAddress,
+        to: destination,
+        value: amount,
+        maxPriorityFeePerGas: "5000000000", // Max priority fee per gas
+        maxFeePerGas: "6000000000000", // Max fee per gas
+      });
+      localStorage.removeItem("confirm");
+      return receipt;
+
       return { error: true, message: "User rejected transaction" };
     } catch (error) {
       return error as string;

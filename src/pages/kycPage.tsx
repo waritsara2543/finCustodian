@@ -1,6 +1,8 @@
+import { useMockupStore } from "@/lib/stores/mockup";
 import Link from "next/link";
 
 const KYCPage = () => {
+  const { setIsKYC } = useMockupStore();
   return (
     <div className="p-10">
       <div className="grid gap-5">
@@ -25,7 +27,7 @@ const KYCPage = () => {
           <button
             className="text-white bg-blue-600 p-2 rounded-lg w-full"
             onClick={() => {
-              localStorage.setItem("isKYC", "true");
+              setIsKYC(true);
             }}
           >
             SUBMIT

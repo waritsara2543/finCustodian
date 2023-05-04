@@ -1,52 +1,12 @@
-import { useEffect, useState } from "react";
-import { FinCustodian, FinCustodianRpc as RPC } from "@/helpers/finCustodian";
-import { CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
-// import RPC from "../helpers/web3RPC";
-
-const clientId = ""; // get from https://dashboard.web3auth.io
+import { FinCustodianRpc as RPC } from "@/lib/helpers/finCustodian";
+import { useGetProvider } from "@/lib/hooks/useProvider";
+import { useLogin } from "@/lib/hooks/useLogin";
+import { useSendTransaction } from "@/lib/hooks/useSendTransaction";
 
 function App() {
-  const [fincus, setFincus] = useState<FinCustodian | null>(null);
-  const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(
-    null
-  );
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const fincus = new FinCustodian({
-          fincusId: clientId,
-          web3AuthNetwork: "testnet", // mainnet, aqua, celeste, cyan or testnet
-          chainConfig: {
-            chainNamespace: CHAIN_NAMESPACES.EIP155,
-            chainId: "0x6545",
-            rpcTarget: "https://rpc-testnet.bitkubchain.io", // This is the public RPC we have added, please pass on your own endpoint while creating an app
-          },
-        });
-
-        setFincus(fincus);
-
-        await fincus.initModal();
-        setProvider(fincus.provider);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    init();
-  }, []);
-
-  const login = async () => {
-    if (!fincus) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    const finCustodianProvider = await fincus.connect();
-    console.log({ finCustodianProvider });
-
-    // if (!finCustodianProvider) {
-    //   Router.push("/kycPage");
-    // }
-    setProvider(finCustodianProvider);
-  };
+  const { fincus, provider } = useGetProvider();
+  const { login, logout } = useLogin();
+  const { sendTransaction } = useSendTransaction();
 
   const authenticateUser = async () => {
     if (!fincus) {
@@ -64,15 +24,6 @@ function App() {
     }
     const user = await fincus.getUserInfo();
     console.log(user);
-  };
-
-  const logout = async () => {
-    if (!fincus) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    await fincus.logout();
-    setProvider(null);
   };
 
   const getChainId = async () => {
@@ -104,16 +55,6 @@ function App() {
     console.log(balance);
   };
 
-  const sendTransaction = async () => {
-    if (!provider) {
-      console.log("provider not initialized yet");
-      return;
-    }
-    const rpc = new RPC(provider);
-    const receipt = await rpc.sendTransaction();
-    console.log(receipt);
-  };
-
   const signMessage = async () => {
     if (!provider) {
       console.log("provider not initialized yet");
@@ -136,49 +77,76 @@ function App() {
 
   const loggedInView = (
     <>
-      <div className="flex-container">
+      <div className="grid gap-5 w-full">
         <div>
-          <button onClick={getUserInfo} className="card">
+          <button
+            onClick={getUserInfo}
+            className="card w-full bg-white rounded-lg text-black py-2 font-semibold"
+          >
             Get User Info
           </button>
         </div>
         <div>
-          <button onClick={authenticateUser} className="card">
+          <button
+            onClick={authenticateUser}
+            className="card w-full bg-white rounded-lg text-black py-2 font-semibold"
+          >
             Get ID Token
           </button>
         </div>
         <div>
-          <button onClick={getChainId} className="card">
+          <button
+            onClick={getChainId}
+            className="card w-full bg-white rounded-lg text-black py-2 font-semibold"
+          >
             Get Chain ID
           </button>
         </div>
         <div>
-          <button onClick={getAccounts} className="card">
+          <button
+            onClick={getAccounts}
+            className="card w-full bg-white rounded-lg text-black py-2 font-semibold"
+          >
             Get Accounts
           </button>
         </div>
         <div>
-          <button onClick={getBalance} className="card">
+          <button
+            onClick={getBalance}
+            className="card w-full bg-white rounded-lg text-black py-2 font-semibold"
+          >
             Get Balance
           </button>
         </div>
         <div>
-          <button onClick={signMessage} className="card">
+          <button
+            onClick={signMessage}
+            className="card w-full bg-white rounded-lg text-black py-2 font-semibold"
+          >
             Sign Message
           </button>
         </div>
         <div>
-          <button onClick={sendTransaction} className="card">
+          <button
+            onClick={sendTransaction}
+            className="card w-full bg-white rounded-lg text-black py-2 font-semibold"
+          >
             Send Transaction
           </button>
         </div>
         <div>
-          <button onClick={getPrivateKey} className="card">
+          <button
+            onClick={getPrivateKey}
+            className="card w-full bg-white rounded-lg text-black py-2 font-semibold"
+          >
             Get Private Key
           </button>
         </div>
         <div>
-          <button onClick={logout} className="card">
+          <button
+            onClick={logout}
+            className="card w-full bg-white rounded-lg text-black py-2 font-semibold"
+          >
             Log Out
           </button>
         </div>
@@ -200,8 +168,8 @@ function App() {
   );
 
   return (
-    <div className="container">
-      <h1 className="title">
+    <div className="px-52 py-5 w-full">
+      <h1 className="title font-bold text-lg text-center py-2">
         <a target="_blank" href="http://web3auth.io/" rel="noreferrer">
           Web3Auth
         </a>
