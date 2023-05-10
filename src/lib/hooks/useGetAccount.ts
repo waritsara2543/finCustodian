@@ -1,9 +1,9 @@
-import { useGetProvider } from "./useProvider";
 import { FinCustodianRpc as RPC } from "@/lib/helpers/finCustodian";
-import { useCallback } from "react";
+import { useCallback, useContext } from "react";
+import { FincustodianContext } from "../components/finCustodianConfig";
 
 export function useGetAccount() {
-  const { provider } = useGetProvider();
+  const provider = useContext(FincustodianContext).provider;
 
   const getChainId = useCallback(async () => {
     if (!provider) {

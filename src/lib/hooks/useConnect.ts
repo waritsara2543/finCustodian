@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-import { useProviderStore } from "../stores/provider";
+import { useContext, useMemo } from "react";
+import { FincustodianContext } from "../components/finCustodianConfig";
 
 export function useConnect() {
-  const { provider } = useProviderStore();
+  const provider = useContext(FincustodianContext).provider;
   const isConnected = useMemo(() => {
     if (provider === null) return false;
     return true;

@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { FinCustodianRpc as RPC } from "@/lib/helpers/finCustodian";
-import { useEffect, useState } from "react";
-import { useLogin } from "@/lib/hooks/useLogin";
-import { useProviderStore } from "@/lib/stores/provider";
+import { useContext, useEffect, useState } from "react";
+import { FincustodianContext } from "@/lib/components/finCustodianConfig";
 
 const ConfirmPage = () => {
-  const { provider } = useProviderStore();
+  const provider = useContext(FincustodianContext).provider;
   const [isLoading, setIsLoading] = useState(false);
   const sendTransaction = async () => {
     if (!provider) return;

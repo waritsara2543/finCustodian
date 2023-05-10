@@ -1,8 +1,8 @@
-import React from "react";
-import { useProviderStore } from "../stores/provider";
+import React, { useContext } from "react";
+import { FincustodianContext } from "../components/finCustodianConfig";
 
 export function useGetUser() {
-  const { fincus } = useProviderStore();
+  const fincus = useContext(FincustodianContext).fincustodian;
   const authenticateUser = React.useCallback(async () => {
     if (!fincus) {
       console.log("web3auth not initialized yet");

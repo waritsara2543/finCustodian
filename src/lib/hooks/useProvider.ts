@@ -1,18 +1,15 @@
 import { FinCustodian } from "@/lib/helpers/finCustodian";
-import { useContext, useEffect, useMemo } from "react";
-import { ClientContext } from "../components/finCustodianConfig";
-import { useProviderStore } from "../stores/provider";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { FincustodianContext } from "../components/finCustodianConfig";
 
 export function useGetProvider(): any {
-  const { provider, setProvider, setFincus, fincus } = useProviderStore();
-  const client = useContext(ClientContext);
+  const finCustodian = useContext(FincustodianContext);
+  const [provider, setProvider] = useState<any>(null);
   useEffect(() => {
     const init = async () => {
       try {
-        const fincus = new FinCustodian(client);
-        console.log({ fincus });
-
-        setFincus(fincus);
+        const fincus = new FinCustodian(finCustodian.client);
+        finCustodian.setFinCustodian(fincus);
         await fincus.initModal();
         setProvider(fincus.provider);
       } catch (error) {
@@ -20,14 +17,18 @@ export function useGetProvider(): any {
       }
     };
     init();
-  }, [client, setProvider, setFincus]);
+  }, []);
+
+  useEffect(() => {
+    finCustodian.setProvider(provider);
+  }, [provider]);
 
   const isInitialized = useMemo(() => {
-    if (!fincus || !provider) {
+    if (!finCustodian.fincustodian || !finCustodian.provider) {
       return false;
     }
     return true;
-  }, [fincus, provider]);
+  }, [finCustodian]);
 
-  return { provider, isInitialized, fincus };
+  return { isInitialized };
 }

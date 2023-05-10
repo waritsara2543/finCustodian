@@ -1,10 +1,12 @@
 import { useLogin } from "@/lib/hooks/useLogin";
 import { useSendTransaction } from "@/lib/hooks/useSendTransaction";
 import { useGetUser } from "@/lib/hooks/useGetUser";
-import { useGetAccount } from "@/lib/hooks/useGetaccount";
+import { useGetAccount } from "@/lib/hooks/useGetAccount";
 import { useConnect } from "@/lib/hooks/useConnect";
+import { useGetProvider } from "@/lib/hooks/useProvider";
 
 function App() {
+  useGetProvider();
   const { isConnected } = useConnect();
   const { login, logout } = useLogin();
   const { sendTransaction } = useSendTransaction();
