@@ -1,79 +1,16 @@
-import { FinCustodianRpc as RPC } from "@/lib/helpers/finCustodian";
-import { useGetProvider } from "@/lib/hooks/useProvider";
 import { useLogin } from "@/lib/hooks/useLogin";
 import { useSendTransaction } from "@/lib/hooks/useSendTransaction";
+import { useGetUser } from "@/lib/hooks/useGetUser";
+import { useGetAccount } from "@/lib/hooks/useGetaccount";
+import { useConnect } from "@/lib/hooks/useConnect";
 
 function App() {
-  const { fincus, provider } = useGetProvider();
+  const { isConnected } = useConnect();
   const { login, logout } = useLogin();
   const { sendTransaction } = useSendTransaction();
-
-  const authenticateUser = async () => {
-    if (!fincus) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    const idToken = await fincus.authenticateUser();
-    console.log(idToken);
-  };
-
-  const getUserInfo = async () => {
-    if (!fincus) {
-      console.log("web3auth not initialized yet");
-      return;
-    }
-    const user = await fincus.getUserInfo();
-    console.log(user);
-  };
-
-  const getChainId = async () => {
-    if (!provider) {
-      console.log("provider not initialized yet");
-      return;
-    }
-    const rpc = new RPC(provider);
-    const chainId = await rpc.getChainId();
-    console.log(chainId);
-  };
-  const getAccounts = async () => {
-    if (!provider) {
-      console.log("provider not initialized yet");
-      return;
-    }
-    const rpc = new RPC(provider);
-    const address = await rpc.getAccounts();
-    console.log(address);
-  };
-
-  const getBalance = async () => {
-    if (!provider) {
-      console.log("provider not initialized yet");
-      return;
-    }
-    const rpc = new RPC(provider);
-    const balance = await rpc.getBalance();
-    console.log(balance);
-  };
-
-  const signMessage = async () => {
-    if (!provider) {
-      console.log("provider not initialized yet");
-      return;
-    }
-    const rpc = new RPC(provider);
-    const signedMessage = await rpc.signMessage();
-    console.log(signedMessage);
-  };
-
-  const getPrivateKey = async () => {
-    if (!provider) {
-      console.log("provider not initialized yet");
-      return;
-    }
-    const rpc = new RPC(provider);
-    const privateKey = await rpc.getPrivateKey();
-    console.log(privateKey);
-  };
+  const { authenticateUser, getUserInfo } = useGetUser();
+  const { getAccounts, getBalance, getChainId, signMessage, getPrivateKey } =
+    useGetAccount();
 
   const loggedInView = (
     <>
@@ -176,9 +113,7 @@ function App() {
         & NextJS Example
       </h1>
 
-      <div className="grid">
-        {provider !== null ? loggedInView : unloggedInView}
-      </div>
+      <div className="grid">{isConnected ? loggedInView : unloggedInView}</div>
 
       <footer className="footer">
         <a

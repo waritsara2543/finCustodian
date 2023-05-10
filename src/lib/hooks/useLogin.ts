@@ -5,7 +5,7 @@ import { useProviderStore } from "../stores/provider";
 import { useGetProvider } from "./useProvider";
 
 export function useLogin() {
-  const { fincus } = useGetProvider();
+  const { fincus } = useProviderStore();
   const { setProvider } = useProviderStore();
   const { isKYC } = useMockupStore();
   const router = useRouter();
