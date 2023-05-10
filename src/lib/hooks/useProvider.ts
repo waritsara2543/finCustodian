@@ -1,12 +1,13 @@
 import { FinCustodian } from "@/lib/helpers/finCustodian";
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { ClientContext } from "../components/finCustodianConfig";
 import { useProviderStore } from "../stores/provider";
 
 export function useGetProvider(): any {
   const [fincus, setFincus] = useState<FinCustodian | null>(null);
   const { provider, setProvider } = useProviderStore();
-
-  const { client } = useProviderStore();
+  //const [provider, setProvider] = useState<any>(null); // TODO: fix this any
+  const client = useContext(ClientContext);
   useEffect(() => {
     const init = async () => {
       try {

@@ -1,22 +1,21 @@
 import { FinCustodianOption } from "@/lib/helpers/finCustodian";
-import React, { useEffect } from "react";
-import { useProviderStore } from "../stores/provider";
+import React from "react";
 
 interface FinCustodianProps {
   children: React.ReactNode;
   client: FinCustodianOption;
 }
 
+export const ClientContext = React.createContext<FinCustodianOption>(
+  {} as FinCustodianOption
+);
+
 const FinCustodianConfig: React.FC<FinCustodianProps> = ({
   client,
   children,
 }) => {
-  const { setClient } = useProviderStore();
-
-  useEffect(() => {
-    setClient(client);
-  }, [client, setClient]);
-
-  return <>{children}</>;
+  return (
+    <ClientContext.Provider value={client}>{children}</ClientContext.Provider>
+  );
 };
 export default FinCustodianConfig;

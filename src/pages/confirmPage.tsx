@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { FinCustodianRpc as RPC } from "@/lib/helpers/finCustodian";
-import { useProviderStore } from "@/lib/stores/provider";
 import { useEffect, useState } from "react";
+import { useLogin } from "@/lib/hooks/useLogin";
+import { useProviderStore } from "@/lib/stores/provider";
 
 const ConfirmPage = () => {
   const { provider } = useProviderStore();

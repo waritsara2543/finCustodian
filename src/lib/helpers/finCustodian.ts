@@ -13,7 +13,6 @@ export class FinCustodian extends Web3Auth {
     // options.enableLogging = true;
     super({ ...options, clientId });
     this.fincusId = options.fincusId;
-    console.log("options", options);
   }
 }
 
